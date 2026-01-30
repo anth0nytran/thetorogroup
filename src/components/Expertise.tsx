@@ -31,14 +31,14 @@ export default function Expertise() {
     return (
         <section className="bg-white pb-32 pt-20 px-6 md:px-12">
             <div className="max-w-[1800px] mx-auto">
-                <div className="flex flex-col md:flex-row justify-between items-end mb-16 px-4">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 px-0 md:px-4">
                     <div className="max-w-xl">
                         <span className="text-xs font-bold tracking-[0.2em] uppercase text-accent border-l-2 border-accent pl-4 mb-4 block">Our Specialties</span>
-                        <h2 className="text-5xl md:text-7xl font-serif text-black leading-[0.9]">
+                        <h2 className="text-4xl md:text-7xl font-serif text-black leading-[0.9]">
                             Expertise & <br /> <span className="italic text-neutral-400">Focus</span>
                         </h2>
                     </div>
-                    <p className="max-w-sm text-right text-xs uppercase tracking-widest text-neutral-500 font-medium mt-8 md:mt-0">
+                    <p className="max-w-sm text-left md:text-right text-[10px] md:text-xs uppercase tracking-widest text-neutral-500 font-medium mt-6 md:mt-0">
                         We specialize in high-stakes transactions across the residential spectrum.
                     </p>
                 </div>

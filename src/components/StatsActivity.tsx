@@ -20,7 +20,7 @@ export default function StatsActivity() {
         <section id="stats" className="flex flex-col xl:flex-row-reverse bg-white items-start">
 
             {/* Left Section: High-Impact Architectural Visual */}
-            <div className="xl:w-1/2 relative min-h-[50vh] xl:h-screen xl:sticky xl:top-0 overflow-hidden bg-neutral-900">
+            <div className="w-full h-[50vh] xl:w-1/2 xl:h-screen xl:sticky xl:top-0 overflow-hidden bg-neutral-900 relative">
                 <img
                     src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2653&auto=format&fit=crop"
                     alt="Modern Architecture at Dusk"
@@ -28,27 +28,27 @@ export default function StatsActivity() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
 
-                <div className="absolute bottom-0 left-0 p-12 md:p-24 z-10">
-                    <span className="text-xs font-bold tracking-[0.2em] uppercase text-accent mb-6 block border-l-2 border-accent pl-4">Est. 2026</span>
-                    <h2 className="text-5xl md:text-7xl font-serif text-white leading-tight mb-6">
+                <div className="absolute bottom-0 left-0 p-8 md:p-24 z-10">
+                    <span className="text-xs font-bold tracking-[0.2em] uppercase text-accent mb-4 md:mb-6 block border-l-2 border-accent pl-4">Est. 2026</span>
+                    <h2 className="text-4xl md:text-5xl xl:text-7xl font-serif text-white leading-tight mb-0 md:mb-6">
                         Orange County, <br /> California.
                     </h2>
                 </div>
             </div>
 
             {/* Right Section: Corporate Data Grid */}
-            <div className="xl:w-1/2 bg-white flex flex-col justify-center py-24 px-12 md:px-24">
+            <div className="w-full xl:w-1/2 bg-white flex flex-col justify-center py-16 px-6 md:px-24">
 
                 {/* Header */}
-                <div className="mb-16">
+                <div className="mb-12 md:mb-16">
                     <span className="text-xs font-bold tracking-[0.2em] uppercase text-accent mb-4 block border-l-2 border-accent pl-4">Market Authority</span>
-                    <h2 className="text-4xl md:text-5xl font-serif text-black leading-tight">
+                    <h2 className="text-3xl md:text-5xl font-serif text-black leading-tight">
                         Deep Roots. <br /> <span className="text-neutral-400 italic">Proven Results.</span>
                     </h2>
                 </div>
 
                 {/* Stats Grid */}
-                <div className="grid grid-cols-2 gap-x-12 gap-y-16 mb-24">
+                <div className="grid grid-cols-2 gap-x-6 md:gap-x-12 gap-y-12 md:gap-y-16 mb-16 md:mb-24">
                     {stats.map((stat, index) => (
                         <motion.div
                             key={index}
@@ -58,9 +58,9 @@ export default function StatsActivity() {
                             viewport={{ once: true }}
                             className="group"
                         >
-                            <h3 className="text-5xl lg:text-6xl font-light font-serif mb-3 text-black group-hover:text-accent transition-colors duration-300">{stat.value}</h3>
+                            <h3 className="text-4xl md:text-6xl font-light font-serif mb-3 text-black group-hover:text-accent transition-colors duration-300">{stat.value}</h3>
                             <div className="h-0.5 w-12 bg-neutral-100 mb-4 group-hover:bg-accent transition-colors duration-500" />
-                            <p className="text-xs uppercase tracking-widest text-neutral-500 font-bold mb-1">{stat.label}</p>
+                            <p className="text-[10px] md:text-xs uppercase tracking-widest text-neutral-500 font-bold mb-1">{stat.label}</p>
                             <p className="text-[10px] text-neutral-400">{stat.desc}</p>
                         </motion.div>
                     ))}
@@ -69,7 +69,7 @@ export default function StatsActivity() {
                 {/* Recent Transactions Table */}
                 <div>
                     <div className="flex justify-between items-end mb-8 border-b border-neutral-100 pb-4">
-                        <h3 className="text-xl font-serif text-black">Live Activity Ledger</h3>
+                        <h3 className="text-lg md:text-xl font-serif text-black">Live Activity Ledger</h3>
                         <button className="text-[10px] uppercase tracking-widest text-accent hover:text-black transition-colors flex items-center gap-2 font-bold group">
                             View Full History <ArrowUpRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
                         </button>
@@ -78,18 +78,30 @@ export default function StatsActivity() {
                     <div className="grid grid-cols-1 divide-y divide-neutral-100">
                         {/* Rows */}
                         {activity.map((item, index) => (
-                            <div key={index} className="grid grid-cols-1 md:grid-cols-12 gap-4 py-6 items-center cursor-default hover:bg-neutral-50 transition-colors -mx-4 px-4 rounded-lg">
-                                <div className="col-span-4">
-                                    <h4 className="font-serif text-lg text-black">{item.city}</h4>
-                                    <p className="text-xs text-neutral-500 mt-1">{item.address}</p>
+                            <div key={index} className="flex flex-col md:grid md:grid-cols-12 gap-4 py-6 md:py-6 items-start md:items-center cursor-default hover:bg-neutral-50 transition-colors -mx-4 px-4 rounded-lg border-b md:border-b-0 border-neutral-100 last:border-0">
+
+                                {/* Mobile Top Row: City & Price */}
+                                <div className="flex md:contents justify-between w-full items-start">
+                                    <div className="col-span-4">
+                                        <h4 className="font-serif text-lg text-black">{item.city}</h4>
+                                        <p className="text-xs text-neutral-500 mt-1">{item.address}</p>
+                                    </div>
+
+                                    {/* Mobile Only Price (Hidden on Desktop) */}
+                                    <div className="md:hidden text-right">
+                                        <p className="font-mono text-black font-medium">{item.price}</p>
+                                    </div>
                                 </div>
+
                                 <div className="col-span-3 hidden md:block">
                                     <span className="text-xs text-neutral-400">Residential Sales</span>
                                 </div>
-                                <div className="col-span-3">
+                                <div className="col-span-3 mt-2 md:mt-0">
                                     <span className={`inline-block px-3 py-1 text-[10px] uppercase tracking-widest font-medium rounded-full ${item.status === 'Sold' ? 'bg-accent/10 text-accent' : 'bg-neutral-100 text-neutral-500'}`}>{item.status}</span>
                                 </div>
-                                <div className="col-span-2 text-right">
+
+                                {/* Desktop Only Price */}
+                                <div className="col-span-2 text-right hidden md:block">
                                     <p className="font-mono text-black">{item.price}</p>
                                 </div>
                             </div>

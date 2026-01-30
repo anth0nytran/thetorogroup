@@ -50,8 +50,8 @@ export default function ContactForm() {
                             />
                         </div>
 
-                        <div className="pt-4 flex justify-end">
-                            <Button size="lg" className="bg-black text-white px-16 py-8 rounded-none text-sm tracking-[0.2em] font-bold uppercase hover:bg-neutral-800 transition-all">
+                        <div className="pt-4 flex justify-center md:justify-end">
+                            <Button size="lg" className="bg-black text-white px-16 py-8 rounded-none text-sm tracking-[0.2em] font-bold uppercase hover:bg-neutral-800 transition-all w-full md:w-auto">
                                 Submit Inquiry
                             </Button>
                         </div>

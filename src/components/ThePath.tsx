@@ -33,10 +33,10 @@ export default function ThePath() {
                             whileInView={{ opacity: 1, y: 0 }}
                             transition={{ delay: index * 0.15 }}
                             viewport={{ once: true }}
-                            className={`group relative pt-12 pr-8 ${index !== steps.length - 1 ? 'border-r border-neutral-100' : ''}`}
+                            className={`group relative pt-12 pr-0 md:pr-8 ${index !== steps.length - 1 ? 'border-b md:border-b-0 md:border-r border-neutral-100 pb-12 md:pb-0' : ''}`}
                         >
-                            {/* Top Line Indicator */}
-                            <div className="absolute top-0 left-0 w-8 h-1 bg-black group-hover:w-full group-hover:bg-accent transition-all duration-500" />
+                            {/* Top Line Indicator (Desktop Only) */}
+                            <div className="hidden md:block absolute top-0 left-0 w-8 h-1 bg-black group-hover:w-full group-hover:bg-accent transition-all duration-500" />
 
                             <div className="mb-8">
                                 <span className="text-4xl font-serif text-neutral-900 group-hover:text-accent transition-colors duration-300 block mb-2">{step.num}</span>
