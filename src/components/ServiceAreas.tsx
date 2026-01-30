@@ -1,12 +1,12 @@
 import { motion } from "framer-motion";
 
 const areas = [
-    { name: "Newport Beach", image: "https://images.unsplash.com/photo-1495150487053-53d8544d6731?q=80&w=2670&auto=format&fit=crop" },
-    { name: "Irvine", image: "https://images.unsplash.com/photo-1627916603767-1755a5b58300?q=80&w=2670&auto=format&fit=crop" },
-    { name: "Huntington Beach", image: "https://images.unsplash.com/photo-1544161515-4ab6ce6db48c?q=80&w=2670&auto=format&fit=crop" },
-    { name: "Laguna Beach", image: "https://images.unsplash.com/photo-1518182170546-07fa6ee16161?q=80&w=2670&auto=format&fit=crop" },
-    { name: "Corona Del Mar", image: "https://images.unsplash.com/photo-1688649807212-32b0dcecc478?q=80&w=2671&auto=format&fit=crop" },
-    { name: "Dana Point", image: "https://images.unsplash.com/photo-1667503723386-b4fe13009774?q=80&w=2670&auto=format&fit=crop" }
+    { name: "Newport Beach", image: "/assets/area_newport_beach.png" },
+    { name: "Irvine", image: "/assets/area_irvine.png" },
+    { name: "Huntington Beach", image: "/assets/area_huntington_beach.png" },
+    { name: "Laguna Beach", image: "/assets/area_laguna_beach.png" },
+    { name: "Corona Del Mar", image: "/assets/area_cdm.png" },
+    { name: "Dana Point", image: "/assets/area_dana_point.png" }
 ];
 
 export default function ServiceAreas() {
@@ -32,7 +32,7 @@ export default function ServiceAreas() {
                         >
                             <img
                                 src={area.image}
-                                alt={area.name}
+                                alt={`Luxury Real Estate in ${area.name}`}
                                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-60 group-hover:opacity-100"
                             />
                             <div className="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors duration-500" />

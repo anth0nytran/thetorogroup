@@ -8,10 +8,13 @@ import TeamSection from "./components/TeamSection";
 import ServiceAreas from "./components/ServiceAreas";
 import ContactForm from "./components/ContactForm";
 
+import TrustedBy from "./components/TrustedBy";
+
 function App() {
   return (
     <Layout>
       <Hero />
+      <TrustedBy />
       <Expertise />
       <StatsActivity />
       <ThePath />

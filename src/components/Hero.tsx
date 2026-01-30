@@ -14,9 +14,9 @@ export default function Hero() {
             {/* Full Color Background Image */}
             <div className="absolute inset-0 z-0">
                 <img
-                    src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2653&auto=format&fit=crop"
-                    alt="Luxury Estate"
-                    className="w-full h-full object-cover scale-105 animate-slow-zoom"
+                    src="/assets/hero_twilight.png"
+                    alt="Luxury Twilight Exterior"
+                    className="w-full h-full object-cover scale-105 animate-slow-zoom opacity-80"
                 />
                 {/* Gradient Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-black/60" />
@@ -34,12 +34,12 @@ export default function Hero() {
                             Orange County • Est. 2026
                         </h2>
                         <h1 className="text-6xl md:text-8xl lg:text-9xl font-serif font-medium tracking-tighter text-white leading-[0.9] drop-shadow-2xl">
-                            THE TORO <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">GROUP</span> CORP.
+                            THE TORO <br /> GROUP CORP.
                         </h1>
                     </div>
 
                     <p className="max-w-xl text-lg md:text-2xl font-light text-white/90 leading-relaxed drop-shadow-md border-l border-white/20 pl-6">
-                        Guided by experience. Driven by results. We help you navigate the luxury market with confidence and clarity.
+                        Guided by experience. Driven by results. We help you navigate the coastal luxury market with confidence and clarity.
                     </p>
 
                     <div className="pt-4 flex flex-col md:flex-row gap-6">

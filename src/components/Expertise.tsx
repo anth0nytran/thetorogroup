@@ -10,7 +10,7 @@ const expertise = [
     {
         title: "Selling",
         subtitle: "Maximum Valuation",
-        image: "https://images.unsplash.com/photo-1600596542815-3ad19fb21208?q=80&w=2574&auto=format&fit=crop",
+        image: "/assets/expertise_selling.png",
         desc: "Positioning your asset for maximum value through cinematic marketing."
     },
     {
@@ -22,7 +22,7 @@ const expertise = [
     {
         title: "Distressed",
         subtitle: "Short Sale Specialist",
-        image: "https://images.unsplash.com/photo-1599809275372-9825b74c055c?q=80&w=2576&auto=format&fit=crop",
+        image: "/assets/expertise_distressed.png",
         desc: "Navigating complex financial situations with discretion and speed."
     }
 ];
@@ -56,7 +56,7 @@ export default function Expertise() {
                             {/* Background Image */}
                             <img
                                 src={item.image}
-                                alt={item.title}
+                                alt={`Luxury Real Estate ${item.title} Services`}
                                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-110 grayscale group-hover:grayscale-0"
                             />
 

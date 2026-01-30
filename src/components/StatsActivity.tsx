@@ -23,7 +23,7 @@ export default function StatsActivity() {
             <div className="w-full h-[50vh] xl:w-1/2 xl:h-screen xl:sticky xl:top-0 overflow-hidden bg-neutral-900 relative">
                 <img
                     src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2653&auto=format&fit=crop"
-                    alt="Modern Architecture at Dusk"
+                    alt="Modern Luxury Estate in Orange County"
                     className="absolute inset-0 w-full h-full object-cover opacity-80"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
@@ -56,10 +56,9 @@ export default function StatsActivity() {
                             whileInView={{ opacity: 1, y: 0 }}
                             transition={{ delay: index * 0.1 }}
                             viewport={{ once: true }}
-                            className="group"
+                            className="group border-t-2 border-black pt-6"
                         >
                             <h3 className="text-4xl md:text-6xl font-light font-serif mb-3 text-black group-hover:text-accent transition-colors duration-300">{stat.value}</h3>
-                            <div className="h-0.5 w-12 bg-neutral-100 mb-4 group-hover:bg-accent transition-colors duration-500" />
                             <p className="text-[10px] md:text-xs uppercase tracking-widest text-neutral-500 font-bold mb-1">{stat.label}</p>
                             <p className="text-[10px] text-neutral-400">{stat.desc}</p>
                         </motion.div>
@@ -68,22 +67,30 @@ export default function StatsActivity() {
 
                 {/* Recent Transactions Table */}
                 <div>
-                    <div className="flex justify-between items-end mb-8 border-b border-neutral-100 pb-4">
-                        <h3 className="text-lg md:text-xl font-serif text-black">Live Activity Ledger</h3>
-                        <button className="text-[10px] uppercase tracking-widest text-accent hover:text-black transition-colors flex items-center gap-2 font-bold group">
+                    <div className="flex justify-between items-end mb-8 border-b-2 border-black pb-4">
+                        <h3 className="text-lg md:text-xl font-serif text-black uppercase tracking-widest font-bold">Live Activity Ledger</h3>
+                        <button className="text-[10px] uppercase tracking-widest text-black hover:text-accent transition-colors flex items-center gap-2 font-bold group">
                             View Full History <ArrowUpRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
                         </button>
                     </div>
 
-                    <div className="grid grid-cols-1 divide-y divide-neutral-100">
+                    {/* Category Headers (Desktop) */}
+                    <div className="hidden md:grid grid-cols-12 gap-4 mb-4 text-[10px] uppercase tracking-widest text-black font-bold px-4">
+                        <div className="col-span-4">Location</div>
+                        <div className="col-span-3">Service</div>
+                        <div className="col-span-3">Status</div>
+                        <div className="col-span-2 text-right">Value</div>
+                    </div>
+
+                    <div className="grid grid-cols-1 divide-y-2 divide-neutral-100">
                         {/* Rows */}
                         {activity.map((item, index) => (
-                            <div key={index} className="flex flex-col md:grid md:grid-cols-12 gap-4 py-6 md:py-6 items-start md:items-center cursor-default hover:bg-neutral-50 transition-colors -mx-4 px-4 rounded-lg border-b md:border-b-0 border-neutral-100 last:border-0">
+                            <div key={index} className="flex flex-col md:grid md:grid-cols-12 gap-4 py-6 md:py-6 items-start md:items-center cursor-default hover:bg-neutral-50 transition-colors -mx-4 px-4 rounded-lg border-b border-neutral-100 md:border-b-0 last:border-0 group">
 
                                 {/* Mobile Top Row: City & Price */}
                                 <div className="flex md:contents justify-between w-full items-start">
                                     <div className="col-span-4">
-                                        <h4 className="font-serif text-lg text-black">{item.city}</h4>
+                                        <h4 className="font-serif text-lg text-black group-hover:text-accent transition-colors duration-300">{item.city}</h4>
                                         <p className="text-xs text-neutral-500 mt-1">{item.address}</p>
                                     </div>
 
@@ -97,7 +104,7 @@ export default function StatsActivity() {
                                     <span className="text-xs text-neutral-400">Residential Sales</span>
                                 </div>
                                 <div className="col-span-3 mt-2 md:mt-0">
-                                    <span className={`inline-block px-3 py-1 text-[10px] uppercase tracking-widest font-medium rounded-full ${item.status === 'Sold' ? 'bg-accent/10 text-accent' : 'bg-neutral-100 text-neutral-500'}`}>{item.status}</span>
+                                    <span className={`inline-block px-3 py-1 text-[10px] uppercase tracking-widest font-medium rounded-full ${item.status === 'Sold' ? 'bg-accent/10 text-accent' : 'bg-neutral-100 text-neutral-500 border border-neutral-200'}`}>{item.status}</span>
                                 </div>
 
                                 {/* Desktop Only Price */}

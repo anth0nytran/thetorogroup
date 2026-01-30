@@ -92,3 +92,9 @@
     @apply font-serif;
   }
 }
+
+@layer utilities {
+  .tracking-widest {
+    letter-spacing: 0.2em;
+  }
+}
