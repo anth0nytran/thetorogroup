@@ -2,12 +2,17 @@ import { motion } from "framer-motion";
 
 export default function TrustedBy() {
     const partners = [
-        "COMPASS",
-        "CHRISTIE'S INTERNATIONAL",
-        "LUXURY PORTFOLIO",
-        "FORBES GLOBAL",
-        "WALL STREET JOURNAL",
-        "ARCHITECTURAL DIGEST"
+        "EHOMES",
+        "REDFIN",
+        "ZILLOW",
+        "REALTOR.COM",
+        "TRULIA",
+        "HOMES.COM",
+        "APARTMENTS.COM",
+        "MOVOTO",
+        "LOOPNET",
+        "GOOGLE SCREENED",
+        "BBB ACCREDITED"
     ];
 
     return (

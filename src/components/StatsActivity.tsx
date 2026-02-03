@@ -2,10 +2,10 @@ import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 
 const stats = [
-    { label: "Families Served", value: "400+", desc: "In the last 12 months" },
-    { label: "Total Volume", value: "$500M+", desc: "Property Sales Managed" },
-    { label: "Price Point", value: "$800k+", desc: "Entry to Ultra-Luxury" },
-    { label: "Client Rating", value: "5.0", desc: "Across All Platforms" },
+    { label: "Team Sales", value: "418", desc: "Last 12 Months" },
+    { label: "Total Team Sales", value: "5,091", desc: "Lifetime" },
+    { label: "Price Range", value: "$10k - $8.5M", desc: "Represented" },
+    { label: "Average Price", value: "$695k", desc: "Sold Homes" },
 ];
 
 const activity = [

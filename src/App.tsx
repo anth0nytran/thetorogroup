@@ -10,6 +10,8 @@ import ContactForm from "./components/ContactForm";
 
 import TrustedBy from "./components/TrustedBy";
 
+import BookingCTA from "./components/BookingCTA";
+
 function App() {
   return (
     <Layout>
@@ -17,8 +19,10 @@ function App() {
       <TrustedBy />
       <Expertise />
       <StatsActivity />
+      <BookingCTA variant="light" text="Numbers Don't Lie. Neither Do Results." buttonText="Start Your Success Story" />
       <ThePath />
       <Testimonials />
+      <BookingCTA variant="dark" text="Join Our List of Satisfied Clients." buttonText="Book Your Strategy Session" />
       <TeamSection />
       <ServiceAreas />
       <ContactForm />

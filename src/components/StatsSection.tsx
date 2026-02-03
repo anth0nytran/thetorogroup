@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
 
 const stats = [
-    { label: "Recent Sales", value: "142", sub: "Last 12 Months" },
-    { label: "Total Volume", value: "$450M+", sub: "Lifetime Sales" },
-    { label: "Zillow Reviews", value: "5.0", sub: "Average Rating" },
-    { label: "Active Listings", value: "18", sub: "Orange County" },
+    { label: "Team Sales", value: "418", sub: "Last 12 Months" },
+    { label: "Total Team Sales", value: "5,091", sub: "Lifetime" },
+    { label: "Price Range", value: "$10k - $8.5M", sub: "Represented" },
+    { label: "Average Price", value: "$695k", sub: "Sold Homes" },
 ];
 
 export default function StatsSection() {
