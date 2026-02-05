@@ -1,33 +1,51 @@
 import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 
 const expertise = [
     {
         title: "Buying",
         subtitle: "Acquisition Strategy",
         image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2670&auto=format&fit=crop",
-        desc: "Access to off-market listings and a strategy that secures your dream home."
+        desc: "Access to off-market listings and a strategy that secures your dream home.",
+        service: "buying"
     },
     {
         title: "Selling",
         subtitle: "Maximum Valuation",
         image: "/assets/expertise_selling.png",
-        desc: "Positioning your asset for maximum value through cinematic marketing."
+        desc: "Positioning your asset for maximum value through cinematic marketing.",
+        service: "selling"
     },
     {
         title: "Relocation",
         subtitle: "Concierge Transition",
         image: "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?q=80&w=2670&auto=format&fit=crop",
-        desc: "Seamless transitions for executives moving to Southern California."
+        desc: "Seamless transitions for executives moving to Southern California.",
+        service: "relocation"
     },
     {
         title: "Distressed",
         subtitle: "Short Sale Specialist",
         image: "/assets/expertise_distressed.png",
-        desc: "Navigating complex financial situations with discretion and speed."
+        desc: "Navigating complex financial situations with discretion and speed.",
+        service: "distressed"
     }
 ];
 
 export default function Expertise() {
+    const handleCardClick = (service: string) => {
+        // Scroll to contact form
+        const contactSection = document.getElementById('contact');
+        if (contactSection) {
+            contactSection.scrollIntoView({ behavior: 'smooth' });
+
+            // Dispatch custom event to pre-select service
+            setTimeout(() => {
+                window.dispatchEvent(new CustomEvent('selectService', { detail: { service } }));
+            }, 500);
+        }
+    };
+
     return (
         <section className="bg-white pb-32 pt-20 px-6 md:px-12">
             <div className="max-w-[1800px] mx-auto">
@@ -51,6 +69,7 @@ export default function Expertise() {
                             whileInView={{ opacity: 1 }}
                             transition={{ delay: index * 0.1 }}
                             viewport={{ once: true }}
+                            onClick={() => handleCardClick(item.service)}
                             className="group relative h-[500px] lg:h-full border-r border-white/20 lg:border-r-0 overflow-hidden cursor-pointer"
                         >
                             {/* Background Image */}
@@ -72,6 +91,12 @@ export default function Expertise() {
                                 <p className="text-neutral-300 text-sm leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200 max-w-xs">
                                     {item.desc}
                                 </p>
+
+                                {/* CTA on hover */}
+                                <div className="flex items-center gap-2 mt-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-300">
+                                    <span className="text-xs uppercase tracking-widest font-bold text-white">Get Started</span>
+                                    <ArrowRight className="w-4 h-4 text-accent" />
+                                </div>
                             </div>
                         </motion.div>
                     ))}

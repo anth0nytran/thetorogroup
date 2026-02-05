@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { AnimatePresence, motion } from "framer-motion";
+import { X } from "lucide-react";
 
 interface LayoutProps {
     children: ReactNode;
@@ -8,6 +10,7 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
     const [scrolled, setScrolled] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -17,7 +20,18 @@ export default function Layout({ children }: LayoutProps) {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
+    // Lock body scroll when menu is open
+    useEffect(() => {
+        if (mobileMenuOpen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "unset";
+        }
+        return () => { document.body.style.overflow = "unset"; };
+    }, [mobileMenuOpen]);
+
     const scrollToSection = (id: string) => {
+        setMobileMenuOpen(false);
         const element = document.getElementById(id);
         if (element) {
             element.scrollIntoView({ behavior: 'smooth' });
@@ -28,14 +42,18 @@ export default function Layout({ children }: LayoutProps) {
         <div className="min-h-screen bg-white text-black font-sans selection:bg-black selection:text-white">
             {/* Navigation - Fixed & Dynamic */}
             <nav className={cn(
-                "fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-6 md:px-12 transition-all duration-300",
-                scrolled ? "bg-black/90 backdrop-blur-md py-4 shadow-lg border-b border-white/10" : "bg-transparent py-8"
+                "fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 md:px-12 transition-all duration-300",
+                scrolled ? "bg-black/90 backdrop-blur-md py-2 shadow-lg border-b border-white/10" : "bg-transparent py-6"
             )}>
                 <div
                     onClick={() => scrollToSection('home')}
-                    className="text-xl font-serif font-bold tracking-tighter cursor-pointer text-white mix-blend-difference"
+                    className="cursor-pointer mix-blend-difference"
                 >
-                    The Toro Group Corp.
+                    <img
+                        src="/logo.svg"
+                        alt="The Toro Group Corp."
+                        className="h-16 md:h-24 w-auto object-contain brightness-0 invert"
+                    />
                 </div>
 
                 <div className="hidden md:flex items-center gap-10 text-xs font-bold tracking-widest uppercase text-white mix-blend-difference">
@@ -64,10 +82,70 @@ export default function Layout({ children }: LayoutProps) {
                     </button>
                 </div>
 
-                <button className="md:hidden uppercase text-xs tracking-widest font-bold text-white mix-blend-difference">
+                <button
+                    onClick={() => setMobileMenuOpen(true)}
+                    className="md:hidden uppercase text-xs tracking-widest font-bold text-white mix-blend-difference"
+                >
                     Menu
                 </button>
             </nav>
+
+            {/* Mobile Menu Overlay */}
+            <AnimatePresence>
+                {mobileMenuOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, y: "-100%" }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: "-100%" }}
+                        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                        className="fixed inset-0 z-[60] bg-black text-white flex flex-col p-6 md:p-12"
+                    >
+                        <div className="flex justify-between items-center mb-12">
+                            <span className="text-xl font-serif font-bold">The Toro Group</span>
+                            <button onClick={() => setMobileMenuOpen(false)} className="p-2">
+                                <X className="w-8 h-8 text-white" />
+                            </button>
+                        </div>
+
+                        <div className="flex flex-col gap-8 items-start">
+                            {['home', 'stats', 'team', 'areas', 'contact'].map((section, i) => (
+                                <motion.button
+                                    key={section}
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: 0.1 + (i * 0.1) }}
+                                    onClick={() => scrollToSection(section)}
+                                    className="text-4xl font-serif hover:text-neutral-400 transition-colors capitalize"
+                                >
+                                    {section === 'stats' ? 'Why Us' : section}
+                                </motion.button>
+                            ))}
+                        </div>
+
+                        <div className="mt-auto">
+                            <p className="text-neutral-500 text-xs uppercase tracking-widest mb-2">Contact</p>
+                            <a href="tel:7147321429" className="block text-xl font-serif mb-1">714.732.1429</a>
+                            <a href="mailto:jack@soldbytoro.com" className="block text-sm text-neutral-400">jack@soldbytoro.com</a>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Sticky Mobile CTA Bar */}
+            <div className={cn(
+                "fixed bottom-0 left-0 right-0 z-40 md:hidden transition-all duration-300",
+                scrolled && !mobileMenuOpen ? "translate-y-0" : "translate-y-full"
+            )}>
+                <div className="bg-accent p-4 flex items-center justify-between">
+                    <span className="text-white text-sm font-bold">Ready to get started?</span>
+                    <button
+                        onClick={() => scrollToSection('contact')}
+                        className="bg-white text-black px-6 py-2 text-xs font-bold uppercase tracking-widest hover:bg-neutral-100 transition-colors"
+                    >
+                        Book Consultation
+                    </button>
+                </div>
+            </div>
 
             <main>
                 {children}

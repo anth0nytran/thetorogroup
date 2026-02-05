@@ -1,0 +1,12 @@
+# robots.txt for The Toro Group Corp
+# https://soldbytoro.com
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://soldbytoro.com/sitemap.xml
+
+# Disallow admin/build paths
+Disallow: /src/
+Disallow: /.vite/
