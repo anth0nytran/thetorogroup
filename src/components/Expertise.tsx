@@ -12,7 +12,7 @@ const expertise = [
     {
         title: "Selling",
         subtitle: "Maximum Valuation",
-        image: "/assets/expertise_selling.png",
+        image: "/assets/expertise_selling.webp",
         desc: "Positioning your asset for maximum value through cinematic marketing.",
         service: "selling"
     },
@@ -26,7 +26,7 @@ const expertise = [
     {
         title: "Distressed",
         subtitle: "Short Sale Specialist",
-        image: "/assets/expertise_distressed.png",
+        image: "/assets/expertise_distressed.webp",
         desc: "Navigating complex financial situations with discretion and speed.",
         service: "distressed"
     }
@@ -47,12 +47,12 @@ export default function Expertise() {
     };
 
     return (
-        <section className="bg-white pb-32 pt-20 px-6 md:px-12">
+        <section id="services" aria-labelledby="services-heading" className="bg-white pb-32 pt-20 px-6 md:px-12">
             <div className="max-w-[1800px] mx-auto">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 px-0 md:px-4">
                     <div className="max-w-xl">
                         <span className="text-xs font-bold tracking-[0.2em] uppercase text-accent border-l-2 border-accent pl-4 mb-4 block">Our Specialties</span>
-                        <h2 className="text-4xl md:text-7xl font-serif text-black leading-[0.9]">
+                        <h2 id="services-heading" className="text-4xl md:text-7xl font-serif text-black leading-[0.9]">
                             Expertise & <br /> <span className="italic text-neutral-400">Focus</span>
                         </h2>
                     </div>
@@ -76,6 +76,10 @@ export default function Expertise() {
                             <img
                                 src={item.image}
                                 alt={`Luxury Real Estate ${item.title} Services`}
+                                loading="lazy"
+                                decoding="async"
+                                width={600}
+                                height={800}
                                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-110 grayscale group-hover:grayscale-0"
                             />
 

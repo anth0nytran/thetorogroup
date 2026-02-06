@@ -1,73 +1,52 @@
-# React + TypeScript + Vite
+# The Toro Group Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Marketing website built with React + Vite, including a Vercel serverless contact endpoint (`api/send.ts`) that sends leads through Resend.
 
-Currently, two official plugins are available:
+## Local Development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Frontend only
+```bash
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Frontend + API routes
+```bash
+npm run dev:vercel
 ```
+
+Use `dev:vercel` when testing the contact form because `/api/send` is served by Vercel Functions.
+
+## Environment Variables
+
+Create `.env` from `.env.example` and set:
+
+- `RESEND_API_KEY`
+- `LEAD_TO_EMAIL`
+- `LEADS_BCC_EMAIL` (optional)
+- `SITE_URL` (used for generated sitemap/robots)
+- `ALLOWED_ORIGINS` (comma-separated; used by API origin checks)
+
+## Build
+
+```bash
+npm run build
+```
+
+`prebuild` automatically regenerates:
+
+- `public/sitemap.xml`
+- `public/robots.txt`
+
+via:
+
+```bash
+npm run seo:generate
+```
+
+## Deployment
+
+Deploy to Vercel and set environment variables in Project Settings.
+
+For production SEO and Google Search Console steps, see:
+
+- `docs/PRODUCTION_SEO_CHECKLIST.md`

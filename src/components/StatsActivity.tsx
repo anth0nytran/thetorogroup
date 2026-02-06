@@ -9,21 +9,26 @@ const stats = [
 ];
 
 const activity = [
-    { address: "123 Coastal Way", city: "Newport Beach", price: "$4,200,000", status: "Sold", date: "Jan 12, 2026" },
-    { address: "456 Hillside Drive", city: "Laguna Niguel", price: "$1,850,000", status: "In Escrow", date: "Jan 08, 2026" },
-    { address: "789 Park Avenue", city: "Irvine", price: "$2,100,000", status: "Just Listed", date: "Jan 03, 2026" },
-    { address: "321 Ocean Blvd", city: "Corona Del Mar", price: "$6,500,000", status: "Sold", date: "Dec 15, 2025" },
+    { address: "2222 Carbon Canyon Rd", city: "Chino Hills", price: "$900,000", status: "Sold", date: "Jan 30, 2026", represented: "Buyer" },
+    { address: "734 Los Altos Ave", city: "Long Beach", price: "$1,250,000", status: "Sold", date: "Jan 30, 2026", represented: "Buyer" },
+    { address: "12315 Norlain Ave", city: "Downey", price: "$940,000", status: "Sold", date: "Jan 30, 2026", represented: "Buyer" },
+    { address: "605 Redondo Ave Unit 308", city: "Long Beach", price: "$625,000", status: "Sold", date: "Jan 30, 2026", represented: "Buyer" },
+    { address: "14442 Deerfield Ave", city: "Tustin", price: "$1,175,000", status: "Sold", date: "Jan 27, 2026", represented: "Seller" },
 ];
 
 export default function StatsActivity() {
     return (
-        <section id="stats" className="flex flex-col xl:flex-row-reverse bg-white items-start">
+        <section id="stats" aria-labelledby="stats-heading" className="flex flex-col xl:flex-row-reverse bg-white items-start">
 
             {/* Left Section: High-Impact Architectural Visual */}
             <div className="w-full h-[50vh] xl:w-1/2 xl:h-screen xl:sticky xl:top-0 overflow-hidden bg-neutral-900 relative">
                 <img
                     src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2653&auto=format&fit=crop"
                     alt="Modern Luxury Estate in Orange County"
+                    loading="lazy"
+                    decoding="async"
+                    width={2653}
+                    height={1800}
                     className="absolute inset-0 w-full h-full object-cover opacity-80"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
@@ -42,7 +47,7 @@ export default function StatsActivity() {
                 {/* Header */}
                 <div className="mb-12 md:mb-16">
                     <span className="text-xs font-bold tracking-[0.2em] uppercase text-accent mb-4 block border-l-2 border-accent pl-4">Market Authority</span>
-                    <h2 className="text-3xl md:text-5xl font-serif text-black leading-tight">
+                    <h2 id="stats-heading" className="text-3xl md:text-5xl font-serif text-black leading-tight">
                         Deep Roots. <br /> <span className="text-neutral-400 italic">Proven Results.</span>
                     </h2>
                 </div>
@@ -75,9 +80,9 @@ export default function StatsActivity() {
                     </div>
 
                     {/* Category Headers (Desktop) */}
-                    <div className="hidden md:grid grid-cols-12 gap-4 mb-4 text-[10px] uppercase tracking-widest text-black font-bold px-4">
+                    <div className="hidden md:grid grid-cols-12 gap-4 mb-4 text-[10px] uppercase tracking-widest text-neutral-400 font-medium">
                         <div className="col-span-4">Location</div>
-                        <div className="col-span-3">Service</div>
+                        <div className="col-span-3">Representation</div>
                         <div className="col-span-3">Status</div>
                         <div className="col-span-2 text-right">Value</div>
                     </div>
@@ -101,7 +106,7 @@ export default function StatsActivity() {
                                 </div>
 
                                 <div className="col-span-3 hidden md:block">
-                                    <span className="text-xs text-neutral-400">Residential Sales</span>
+                                    <span className="text-xs text-neutral-400">{item.represented}</span>
                                 </div>
                                 <div className="col-span-3 mt-2 md:mt-0">
                                     <span className={`inline-block px-3 py-1 text-[10px] uppercase tracking-widest font-medium rounded-full ${item.status === 'Sold' ? 'bg-accent/10 text-accent' : 'bg-neutral-100 text-neutral-500 border border-neutral-200'}`}>{item.status}</span>

@@ -1,5 +1,5 @@
 import { Button } from "./ui/button";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const services = [
     { value: "", label: "Select a Service" },
@@ -24,6 +24,13 @@ const isValidPhone = (value: string): boolean => {
 };
 
 export default function ContactForm() {
+    const formStartedAtRef = useRef<number>(Date.now());
+    const [honeypot, setHoneypot] = useState({
+        website: "",
+        company_url: "",
+        fax: "",
+        address2: ""
+    });
     const [selectedService, setSelectedService] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -49,11 +56,15 @@ export default function ContactForm() {
 
     // Listen for custom event from Expertise cards
     useEffect(() => {
-        const handleServiceSelect = (e: CustomEvent) => {
-            setSelectedService(e.detail.service);
+        const handleServiceSelect = (event: Event) => {
+            const customEvent = event as CustomEvent<{ service?: string }>;
+            const service = customEvent.detail?.service;
+            if (typeof service === "string") {
+                setSelectedService(service);
+            }
         };
-        window.addEventListener("selectService" as any, handleServiceSelect as any);
-        return () => window.removeEventListener("selectService" as any, handleServiceSelect as any);
+        window.addEventListener("selectService", handleServiceSelect);
+        return () => window.removeEventListener("selectService", handleServiceSelect);
     }, []);
 
     const handleBlur = (field: string) => {
@@ -82,14 +93,91 @@ export default function ContactForm() {
             : `${base} border-red-400 focus:border-red-500`;
     };
 
+    const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+    const [errorMessage, setErrorMessage] = useState("");
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        // Touch all fields to show validation errors
+        setTouched({
+            firstName: true,
+            lastName: true,
+            email: true,
+            phone: true,
+            service: true
+        });
+
+        // Validate all
+        if (!isFirstNameValid || !isLastNameValid || !isEmailValid || !isPhoneValid || !selectedService) {
+            setErrorMessage("Please fill out all required fields correctly.");
+            return;
+        }
+
+        setStatus("submitting");
+        setErrorMessage("");
+
+        try {
+            const res = await fetch("/api/send", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    firstName,
+                    lastName,
+                    email,
+                    phone,
+                    service: selectedService,
+                    message,
+                    page: window.location.href,
+                    ...honeypot,
+                    _ts: formStartedAtRef.current
+                })
+            });
+
+            const contentType = res.headers.get("content-type") || "";
+            if (!contentType.includes("application/json")) {
+                if (res.status === 404) {
+                    throw new Error("Contact API route not found. Run with `vercel dev` so /api/send is available.");
+                }
+                throw new Error(`Unexpected server response (${res.status}).`);
+            }
+
+            const data = await res.json();
+
+            if (res.ok && data.ok) {
+                setStatus("success");
+                // Reset form
+                setFirstName("");
+                setLastName("");
+                setEmail("");
+                setPhone("");
+                setMessage("");
+                setSelectedService("");
+                setTouched({});
+                setHoneypot({ website: "", company_url: "", fax: "", address2: "" });
+                formStartedAtRef.current = Date.now();
+            } else {
+                setStatus("error");
+                setErrorMessage(data.error || "Something went wrong. Please try again.");
+            }
+        } catch (error) {
+            setStatus("error");
+            if (error instanceof Error && error.message) {
+                setErrorMessage(error.message);
+            } else {
+                setErrorMessage("Failed to send. Please try again later.");
+            }
+        }
+    };
+
     return (
-        <section id="contact" className="bg-white py-32 px-6 md:px-12 relative border-t-2 border-black">
+        <section id="contact" aria-labelledby="contact-heading" className="bg-white py-32 px-6 md:px-12 relative border-t-2 border-black">
             <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-24">
 
                 {/* Left Side: Info */}
                 <div className="lg:w-1/3">
                     <span className="text-xs font-bold tracking-[0.2em] uppercase text-black mb-6 block border-l-2 border-black pl-4">Inquiry</span>
-                    <h2 className="text-5xl md:text-7xl font-serif mb-12 text-black leading-none">
+                    <h2 id="contact-heading" className="text-5xl md:text-7xl font-serif mb-12 text-black leading-none">
                         Start The <br /> Conversation.
                     </h2>
 
@@ -108,111 +196,183 @@ export default function ContactForm() {
 
                 {/* Right Side: Form */}
                 <div className="lg:w-2/3">
-                    <form className="space-y-16">
-                        {/* Service Selection */}
-                        <div className="group relative">
-                            <label className="text-[10px] uppercase tracking-widest font-bold text-neutral-400 absolute -top-3 left-0 bg-white pr-2">I'm Interested In</label>
-                            <select
-                                value={selectedService}
-                                onChange={(e) => setSelectedService(e.target.value)}
-                                className="w-full border-b-2 border-neutral-200 py-4 text-xl font-serif focus:border-black focus:outline-none transition-all bg-transparent cursor-pointer appearance-none"
+                    {status === "success" ? (
+                        <div className="bg-neutral-50 p-12 text-center border-l-4 border-black">
+                            <h3 className="text-3xl font-serif mb-4">Message Sent</h3>
+                            <p className="text-neutral-500 mb-8">Thank you for reaching out. We will get back to you shortly.</p>
+                            <button
+                                onClick={() => setStatus("idle")}
+                                className="text-xs font-bold uppercase tracking-widest border-b border-black pb-1 hover:text-neutral-600 transition-colors"
                             >
-                                {services.map((s) => (
-                                    <option key={s.value} value={s.value}>{s.label}</option>
-                                ))}
-                            </select>
-                            <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none">
-                                <svg className="w-4 h-4 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </div>
+                                Send another message
+                            </button>
                         </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                            <div className="group relative">
-                                <label className="text-[10px] uppercase tracking-widest font-bold text-neutral-400 absolute -top-3 left-0 bg-white pr-2">First Name</label>
+                    ) : (
+                        <form onSubmit={handleSubmit} className="space-y-16">
+                            <div className="hidden" aria-hidden="true">
+                                <label htmlFor="website-field">Website</label>
                                 <input
+                                    id="website-field"
+                                    name="website"
                                     type="text"
-                                    value={firstName}
-                                    onChange={(e) => setFirstName(e.target.value)}
-                                    onBlur={() => handleBlur('firstName')}
-                                    pattern="[A-Za-z\s\-']{2,50}"
-                                    title="Please enter a valid name (letters, spaces, hyphens only)"
-                                    className={getInputClass(isFirstNameValid, 'firstName')}
-                                    placeholder="First Name"
+                                    value={honeypot.website}
+                                    autoComplete="off"
+                                    tabIndex={-1}
+                                    onChange={(event) => setHoneypot((prev) => ({ ...prev, website: event.target.value }))}
                                 />
-                                {touched.firstName && !isFirstNameValid && firstName && (
-                                    <p className="text-xs text-red-500 mt-2">Letters only, min 2 characters</p>
+                                <label htmlFor="company-url-field">Company URL</label>
+                                <input
+                                    id="company-url-field"
+                                    name="company_url"
+                                    type="text"
+                                    value={honeypot.company_url}
+                                    autoComplete="off"
+                                    tabIndex={-1}
+                                    onChange={(event) => setHoneypot((prev) => ({ ...prev, company_url: event.target.value }))}
+                                />
+                                <label htmlFor="fax-field">Fax</label>
+                                <input
+                                    id="fax-field"
+                                    name="fax"
+                                    type="text"
+                                    value={honeypot.fax}
+                                    autoComplete="off"
+                                    tabIndex={-1}
+                                    onChange={(event) => setHoneypot((prev) => ({ ...prev, fax: event.target.value }))}
+                                />
+                                <label htmlFor="address2-field">Address 2</label>
+                                <input
+                                    id="address2-field"
+                                    name="address2"
+                                    type="text"
+                                    value={honeypot.address2}
+                                    autoComplete="off"
+                                    tabIndex={-1}
+                                    onChange={(event) => setHoneypot((prev) => ({ ...prev, address2: event.target.value }))}
+                                />
+                            </div>
+
+                            {/* Service Selection */}
+                            <div className="group relative">
+                                <label htmlFor="service" className="text-[10px] uppercase tracking-widest font-bold text-neutral-400 absolute -top-3 left-0 bg-white pr-2">I'm Interested In</label>
+                                <select
+                                    id="service"
+                                    value={selectedService}
+                                    onChange={(e) => setSelectedService(e.target.value)}
+                                    className="w-full border-b-2 border-neutral-200 py-4 text-xl font-serif focus:border-black focus:outline-none transition-all bg-transparent cursor-pointer appearance-none"
+                                >
+                                    {services.map((s) => (
+                                        <option key={s.value} value={s.value}>{s.label}</option>
+                                    ))}
+                                </select>
+                                {touched.service && !selectedService && (
+                                    <p className="text-xs text-red-500 mt-2 absolute">Please select a service</p>
+                                )}
+                                <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none">
+                                    <svg className="w-4 h-4 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                                <div className="group relative">
+                                    <label htmlFor="first-name" className="text-[10px] uppercase tracking-widest font-bold text-neutral-400 absolute -top-3 left-0 bg-white pr-2">First Name</label>
+                                    <input
+                                        id="first-name"
+                                        type="text"
+                                        value={firstName}
+                                        onChange={(e) => setFirstName(e.target.value)}
+                                        onBlur={() => handleBlur('firstName')}
+                                        autoComplete="given-name"
+                                        className={getInputClass(isFirstNameValid, 'firstName')}
+                                        placeholder="First Name"
+                                    />
+                                    {touched.firstName && !isFirstNameValid && (
+                                        <p className="text-xs text-red-500 mt-2">Letters only, min 2 characters</p>
+                                    )}
+                                </div>
+                                <div className="group relative">
+                                    <label htmlFor="last-name" className="text-[10px] uppercase tracking-widest font-bold text-neutral-400 absolute -top-3 left-0 bg-white pr-2">Last Name</label>
+                                    <input
+                                        id="last-name"
+                                        type="text"
+                                        value={lastName}
+                                        onChange={(e) => setLastName(e.target.value)}
+                                        onBlur={() => handleBlur('lastName')}
+                                        autoComplete="family-name"
+                                        className={getInputClass(isLastNameValid, 'lastName')}
+                                        placeholder="Last Name"
+                                    />
+                                    {touched.lastName && !isLastNameValid && (
+                                        <p className="text-xs text-red-500 mt-2">Letters only, min 2 characters</p>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div className="group relative">
+                                <label htmlFor="email" className="text-[10px] uppercase tracking-widest font-bold text-neutral-400 absolute -top-3 left-0 bg-white pr-2">Email Address</label>
+                                <input
+                                    id="email"
+                                    type="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    onBlur={() => handleBlur('email')}
+                                    autoComplete="email"
+                                    className={getInputClass(isEmailValid, 'email')}
+                                    placeholder="Email Address"
+                                />
+                                {touched.email && !isEmailValid && (
+                                    <p className="text-xs text-red-500 mt-2">Please enter a valid email address</p>
                                 )}
                             </div>
+
                             <div className="group relative">
-                                <label className="text-[10px] uppercase tracking-widest font-bold text-neutral-400 absolute -top-3 left-0 bg-white pr-2">Last Name</label>
+                                <label htmlFor="phone" className="text-[10px] uppercase tracking-widest font-bold text-neutral-400 absolute -top-3 left-0 bg-white pr-2">Phone Number</label>
                                 <input
-                                    type="text"
-                                    value={lastName}
-                                    onChange={(e) => setLastName(e.target.value)}
-                                    onBlur={() => handleBlur('lastName')}
-                                    pattern="[A-Za-z\s\-']{2,50}"
-                                    title="Please enter a valid name (letters, spaces, hyphens only)"
-                                    className={getInputClass(isLastNameValid, 'lastName')}
-                                    placeholder="Last Name"
+                                    id="phone"
+                                    type="tel"
+                                    value={phone}
+                                    onChange={handlePhoneChange}
+                                    onBlur={() => handleBlur('phone')}
+                                    autoComplete="tel"
+                                    placeholder="(555) 555-5555"
+                                    className={getInputClass(isPhoneValid, 'phone')}
                                 />
-                                {touched.lastName && !isLastNameValid && lastName && (
-                                    <p className="text-xs text-red-500 mt-2">Letters only, min 2 characters</p>
+                                {touched.phone && !isPhoneValid && (
+                                    <p className="text-xs text-red-500 mt-2">Please enter a 10-digit phone number</p>
                                 )}
                             </div>
-                        </div>
 
-                        <div className="group relative">
-                            <label className="text-[10px] uppercase tracking-widest font-bold text-neutral-400 absolute -top-3 left-0 bg-white pr-2">Email Address</label>
-                            <input
-                                type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                onBlur={() => handleBlur('email')}
-                                pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
-                                title="Please enter a valid email address"
-                                className={getInputClass(isEmailValid, 'email')}
-                                placeholder="Email Address"
-                            />
-                            {touched.email && !isEmailValid && email && (
-                                <p className="text-xs text-red-500 mt-2">Please enter a valid email address</p>
+                            <div className="group relative">
+                                <label htmlFor="message" className="text-[10px] uppercase tracking-widest font-bold text-neutral-400 absolute -top-3 left-0 bg-white pr-2">Message</label>
+                                <textarea
+                                    id="message"
+                                    value={message}
+                                    onChange={(e) => setMessage(e.target.value)}
+                                    rows={1}
+                                    className="w-full border-b-2 border-neutral-200 py-4 text-xl font-serif focus:border-black focus:outline-none transition-all bg-transparent placeholder-transparent resize-none min-h-[60px]"
+                                    placeholder="How can we help?"
+                                />
+                            </div>
+
+                            {errorMessage && (
+                                <p className="text-red-500 text-sm font-bold">{errorMessage}</p>
                             )}
-                        </div>
 
-                        <div className="group relative">
-                            <label className="text-[10px] uppercase tracking-widest font-bold text-neutral-400 absolute -top-3 left-0 bg-white pr-2">Phone Number</label>
-                            <input
-                                type="tel"
-                                value={phone}
-                                onChange={handlePhoneChange}
-                                onBlur={() => handleBlur('phone')}
-                                placeholder="(555) 555-5555"
-                                className={getInputClass(isPhoneValid, 'phone')}
-                            />
-                            {touched.phone && !isPhoneValid && phone && (
-                                <p className="text-xs text-red-500 mt-2">Please enter a 10-digit phone number</p>
-                            )}
-                        </div>
-
-                        <div className="group relative">
-                            <label className="text-[10px] uppercase tracking-widest font-bold text-neutral-400 absolute -top-3 left-0 bg-white pr-2">Message</label>
-                            <textarea
-                                value={message}
-                                onChange={(e) => setMessage(e.target.value)}
-                                rows={1}
-                                className="w-full border-b-2 border-neutral-200 py-4 text-xl font-serif focus:border-black focus:outline-none transition-all bg-transparent placeholder-transparent resize-none min-h-[60px]"
-                                placeholder="How can we help?"
-                            />
-                        </div>
-
-                        <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                            <p className="text-xs text-neutral-400">Takes less than 30 seconds</p>
-                            <Button size="lg" className="bg-black text-white px-12 py-8 rounded-none text-xs tracking-[0.2em] font-bold uppercase hover:bg-neutral-800 transition-all w-full md:w-auto">
-                                Submit Inquiry
-                            </Button>
-                        </div>
-                    </form>
+                            <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                                <p className="text-xs text-neutral-400">Takes less than 30 seconds</p>
+                                <Button
+                                    type="submit"
+                                    disabled={status === "submitting"}
+                                    size="lg"
+                                    className="bg-black text-white px-12 py-8 rounded-none text-xs tracking-[0.2em] font-bold uppercase hover:bg-neutral-800 transition-all w-full md:w-auto disabled:opacity-50"
+                                >
+                                    {status === "submitting" ? "Sending..." : "Submit Inquiry"}
+                                </Button>
+                            </div>
+                        </form>
+                    )}
                 </div>
             </div>
         </section>

@@ -15,6 +15,9 @@ export default function StatsSection() {
                 <img
                     src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2670&auto=format&fit=crop"
                     alt="City Structure"
+                    loading="lazy"
+                    width="2670"
+                    height="1500"
                     className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-neutral-900/90" />

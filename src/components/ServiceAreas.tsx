@@ -1,20 +1,20 @@
 import { motion } from "framer-motion";
 
 const areas = [
-    { name: "Newport Beach", image: "/assets/area_newport_beach.png" },
-    { name: "Irvine", image: "/assets/area_irvine.png" },
-    { name: "Huntington Beach", image: "/assets/area_huntington_beach.png" },
-    { name: "Laguna Beach", image: "/assets/area_laguna_beach.png" },
-    { name: "Corona Del Mar", image: "/assets/area_cdm.png" },
-    { name: "Dana Point", image: "/assets/area_dana_point.png" }
+    { name: "Newport Beach", image: "/assets/area_newport_beach.webp" },
+    { name: "Irvine", image: "/assets/area_irvine.webp" },
+    { name: "Huntington Beach", image: "/assets/area_huntington_beach.webp" },
+    { name: "Laguna Beach", image: "/assets/area_laguna_beach.webp" },
+    { name: "Corona Del Mar", image: "/assets/area_cdm.webp" },
+    { name: "Dana Point", image: "/assets/area_dana_point.webp" }
 ];
 
 export default function ServiceAreas() {
     return (
-        <section id="areas" className="bg-neutral-900 text-white py-32 px-6 md:px-12">
+        <section id="areas" aria-labelledby="areas-heading" className="bg-neutral-900 text-white py-32 px-6 md:px-12">
             <div className="max-w-7xl mx-auto">
                 <div className="mb-16">
-                    <h2 className="text-4xl md:text-5xl font-serif mb-4">Prime Territories</h2>
+                    <h2 id="areas-heading" className="text-4xl md:text-5xl font-serif mb-4">Prime Territories</h2>
                     <p className="text-neutral-400 font-light text-lg max-w-xl">
                         Representing the finest properties across Southern California's most coveted coastal communities.
                     </p>
@@ -33,6 +33,10 @@ export default function ServiceAreas() {
                             <img
                                 src={area.image}
                                 alt={`Luxury Real Estate in ${area.name}`}
+                                loading="lazy"
+                                decoding="async"
+                                width={800}
+                                height={450}
                                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-60 group-hover:opacity-100"
                             />
                             <div className="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors duration-500" />

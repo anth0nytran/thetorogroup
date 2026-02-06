@@ -9,12 +9,12 @@ const steps = [
 
 export default function ThePath() {
     return (
-        <section className="bg-white py-32 px-6 md:px-12 border-b border-neutral-100">
+        <section id="process" aria-labelledby="process-heading" className="bg-white py-32 px-6 md:px-12 border-b border-neutral-100">
             <div className="max-w-[1600px] mx-auto">
                 <div className="flex flex-col md:flex-row justify-between items-start mb-24 gap-8">
                     <div className="max-w-xl">
                         <span className="text-xs font-bold tracking-[0.2em] uppercase text-accent border-l-2 border-accent pl-4 mb-6 block">Process</span>
-                        <h2 className="text-5xl md:text-6xl font-serif text-black leading-none">
+                        <h2 id="process-heading" className="text-5xl md:text-6xl font-serif text-black leading-none">
                             A Simplified <br /> <span className="text-neutral-400">Path Home</span>
                         </h2>
                     </div>

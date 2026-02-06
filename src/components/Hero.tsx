@@ -10,12 +10,21 @@ export default function Hero() {
     };
 
     return (
-        <div id="home" className="relative h-screen w-full flex items-center justify-center bg-black text-white overflow-hidden">
+        <section
+            id="home"
+            aria-labelledby="hero-heading"
+            className="relative h-screen w-full flex items-center justify-center bg-black text-white overflow-hidden"
+        >
             {/* Full Color Background Image */}
             <div className="absolute inset-0 z-0">
                 <img
-                    src="/assets/hero_twilight.png"
+                    src="/assets/hero_twilight.webp"
                     alt="Luxury Twilight Exterior"
+                    width={1024}
+                    height={1024}
+                    loading="eager"
+                    fetchPriority="high"
+                    decoding="async"
                     className="w-full h-full object-cover scale-105 animate-slow-zoom opacity-80"
                 />
                 {/* Gradient Overlay */}
@@ -30,10 +39,10 @@ export default function Hero() {
                     className="space-y-10 max-w-4xl"
                 >
                     <div>
-                        <h2 className="text-sm md:text-base tracking-[0.4em] font-bold uppercase text-white/90 mb-4 border-l-2 border-accent pl-4">
+                        <p className="text-sm md:text-base tracking-[0.4em] font-bold uppercase text-white/90 mb-4 border-l-2 border-accent pl-4">
                             Orange County • Est. 2026
-                        </h2>
-                        <h1 className="text-6xl md:text-8xl lg:text-9xl font-serif font-medium tracking-tighter text-white leading-[0.9] drop-shadow-2xl">
+                        </p>
+                        <h1 id="hero-heading" className="text-6xl md:text-8xl lg:text-9xl font-serif font-medium tracking-tighter text-white leading-[0.9] drop-shadow-2xl">
                             THE TORO <br /> GROUP CORP.
                         </h1>
                     </div>
@@ -72,6 +81,6 @@ export default function Hero() {
                 <span className="text-[10px] uppercase tracking-widest font-bold text-accent">Scroll to Explore</span>
                 <div className="h-[2px] w-24 bg-accent" />
             </motion.div>
-        </div>
+        </section>
     );
 }

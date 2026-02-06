@@ -7,6 +7,7 @@ import Testimonials from "./components/Testimonials";
 import TeamSection from "./components/TeamSection";
 import ServiceAreas from "./components/ServiceAreas";
 import ContactForm from "./components/ContactForm";
+import LocalSeoContent from "./components/LocalSeoContent";
 
 import TrustedBy from "./components/TrustedBy";
 
@@ -25,6 +26,7 @@ function App() {
       <BookingCTA variant="dark" text="Join Our List of Satisfied Clients." buttonText="Book Your Strategy Session" />
       <TeamSection />
       <ServiceAreas />
+      <LocalSeoContent />
       <ContactForm />
     </Layout>
   );

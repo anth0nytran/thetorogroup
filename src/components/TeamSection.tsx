@@ -1,21 +1,30 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 
 
 const team = [
     {
         name: "Jack Toro",
         role: "Team Leader",
-        image: "/jack.jpg"
+        image: "/jack.webp",
+        stats: "6 Years Experience",
+        specialties: "Buyer's Agent, Listing Agent, Relocation, Commercial Properties",
+        zillow: "https://www.zillow.com/profile/Jack%20Toro"
     },
     {
         name: "Sebastian Street",
         role: "Senior Associate",
-        image: "/sebastian.jpg"
+        image: "/sebastian.webp",
+        stats: "4 Years Experience",
+        specialties: "Buyer's Agent, Listing Agent",
+        zillow: "https://www.zillow.com/profile/sebastianstreetrlty"
     },
     {
         name: "Seth Bewley",
         role: "Junior Associate",
-        image: "/seth.jpg"
+        image: "/seth.webp",
+        stats: "2 Years Experience",
+        specialties: "Buyer's Agent, Listing Agent, Property Management",
+        zillow: "https://www.zillow.com/profile/sethbewley"
     }
 ];
 
@@ -54,15 +63,36 @@ export default function TeamSection() {
                                 <div className="overflow-hidden mb-6 aspect-[3/4] bg-neutral-100 relative">
                                     <img
                                         src={member.image}
-                                        alt={member.name}
+                                        alt={`Portrait of ${member.name}, ${member.role} at The Toro Group`}
                                         style={imageStyle}
+                                        loading="lazy"
+                                        decoding="async"
+                                        width={600}
+                                        height={800}
                                         className={`absolute inset-0 w-full h-full object-cover transition-transform duration-700 ${!member.name.includes("Sebastian") && !member.name.includes("Jack") ? 'group-hover:scale-105' : ''}`}
                                     />
                                 </div>
 
                                 <div className="border-l border-black pl-4 transition-all duration-300 group-hover:pl-6 group-hover:border-accent">
                                     <h3 className="text-2xl font-serif text-black group-hover:text-accent transition-colors">{member.name}</h3>
-                                    <p className="text-xs uppercase tracking-widest text-neutral-500 mt-1">{member.role}</p>
+                                    <p className="text-xs uppercase tracking-widest text-neutral-500 mt-1 mb-3">{member.role}</p>
+
+                                    {/* Minimal Stats & Links */}
+                                    <div className="space-y-1">
+                                        <p className="text-[10px] text-neutral-400 font-medium uppercase tracking-wider">{member.stats}</p>
+                                        {member.specialties && (
+                                            <p className="text-[10px] text-neutral-400 leading-relaxed max-w-[80%] line-clamp-1">{member.specialties}</p>
+                                        )}
+                                        {member.zillow && member.zillow !== "#" && (
+                                            <a
+                                                href={member.zillow}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-black/60 hover:text-accent mt-2 transition-colors"
+                                            >
+                                                View Zillow Profile</a>
+                                        )}
+                                    </div>
                                 </div>
                             </motion.div>
                         );
@@ -72,3 +102,4 @@ export default function TeamSection() {
         </section>
     );
 }
+
