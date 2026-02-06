@@ -299,7 +299,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const safeName = fullName || "Website Form";
     const safeService = service || "Website Form";
-    const subject = `New Lead | ${safeService} | ${safeName}`;
+    const subject = `⚠️New Lead ⚠️| ${safeService} | ${safeName}`;
 
     const pageUrlIsDev =
         !!page &&
