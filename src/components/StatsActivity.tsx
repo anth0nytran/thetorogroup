@@ -34,7 +34,7 @@ export default function StatsActivity() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
 
                 <div className="absolute bottom-0 left-0 p-8 md:p-24 z-10">
-                    <span className="text-xs font-bold tracking-[0.2em] uppercase text-accent mb-4 md:mb-6 block border-l-2 border-accent pl-4">Est. 2026</span>
+                    <span className="text-xs font-bold tracking-[0.2em] uppercase text-accent mb-4 md:mb-6 block border-l-2 border-accent pl-4">Est. 2021</span>
                     <h2 className="text-4xl md:text-5xl xl:text-7xl font-serif text-white leading-tight mb-0 md:mb-6">
                         Orange County, <br /> California.
                     </h2>

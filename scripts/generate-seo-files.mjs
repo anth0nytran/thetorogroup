@@ -1,7 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-const SITE_URL = (process.env.SITE_URL || "https://soldbytoro.com").replace(/\/+$/, "");
+const SITE_URL = (process.env.SITE_URL || "https://www.soldbytoro.com").replace(/\/+$/, "");
 const TODAY = new Date().toISOString().slice(0, 10);
 
 const routes = [

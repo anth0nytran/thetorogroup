@@ -11,8 +11,6 @@ export default function TrustedBy() {
         "APARTMENTS.COM",
         "MOVOTO",
         "LOOPNET",
-        "GOOGLE SCREENED",
-        "BBB ACCREDITED"
     ];
 
     return (

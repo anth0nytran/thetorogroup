@@ -40,7 +40,7 @@ export default function Hero() {
                 >
                     <div>
                         <p className="text-sm md:text-base tracking-[0.4em] font-bold uppercase text-white/90 mb-4 border-l-2 border-accent pl-4">
-                            Orange County • Est. 2026
+                            Orange County • Est. 2021
                         </p>
                         <h1 id="hero-heading" className="text-6xl md:text-8xl lg:text-9xl font-serif font-medium tracking-tighter text-white leading-[0.9] drop-shadow-2xl">
                             THE TORO <br /> GROUP CORP.
@@ -48,7 +48,7 @@ export default function Hero() {
                     </div>
 
                     <p className="max-w-xl text-lg md:text-2xl font-light text-white/90 leading-relaxed drop-shadow-md border-l border-white/20 pl-6">
-                        Guided by experience. Driven by results. We help you navigate the coastal luxury market with confidence and clarity.
+                        Orange County real estate guidance for buying, selling, relocation, and distressed-property strategy with confidence and clarity.
                     </p>
 
                     <div className="pt-4 flex flex-col md:flex-row gap-6">

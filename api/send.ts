@@ -11,13 +11,29 @@ const MAX_SERVICE_LENGTH = 80;
 const MAX_PAGE_URL_LENGTH = 2048;
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT_MAX_REQUESTS = 12;
+const DUPLICATE_WINDOW_MS = 6 * 60 * 60 * 1000;
+const DUPLICATE_MAX_HITS = 2;
+
+const ALLOWED_SERVICES = new Set(["buying", "selling", "relocation", "distressed"]);
+const SERVICE_LABELS: Record<string, string> = {
+    buying: "Buying",
+    selling: "Selling",
+    relocation: "Relocation",
+    distressed: "Distressed Properties"
+};
 
 type RateLimitState = {
     count: number;
     resetAt: number;
 };
 
+type DuplicateSubmissionState = {
+    count: number;
+    resetAt: number;
+};
+
 const rateLimitStore = new Map<string, RateLimitState>();
+const duplicateSubmissionStore = new Map<string, DuplicateSubmissionState>();
 
 const escapeHtml = (value: string) =>
     value.replace(/[&<>"']/g, (char) => {
@@ -39,6 +55,8 @@ const escapeHtml = (value: string) =>
 
 const normalize = (value: unknown) =>
     typeof value === "string" ? value.replace(/\r\n/g, "\n").trim() : "";
+
+const compactText = (value: string) => value.toLowerCase().replace(/\s+/g, " ").trim();
 
 const pickField = (data: Record<string, unknown>, keys: string[]) => {
     for (const key of keys) {
@@ -142,6 +160,32 @@ const isRateLimited = (clientIp: string) => {
     return false;
 };
 
+const isLikelyDuplicateSubmission = (submissionKey: string) => {
+    const now = Date.now();
+    const current = duplicateSubmissionStore.get(submissionKey);
+
+    if (!current || current.resetAt <= now) {
+        duplicateSubmissionStore.set(submissionKey, {
+            count: 1,
+            resetAt: now + DUPLICATE_WINDOW_MS
+        });
+        return false;
+    }
+
+    current.count += 1;
+    duplicateSubmissionStore.set(submissionKey, current);
+
+    if (duplicateSubmissionStore.size > 2000) {
+        for (const [key, state] of duplicateSubmissionStore.entries()) {
+            if (state.resetAt <= now) {
+                duplicateSubmissionStore.delete(key);
+            }
+        }
+    }
+
+    return current.count > DUPLICATE_MAX_HITS;
+};
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.setHeader("Cache-Control", "no-store");
 
@@ -194,6 +238,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const service = pickField(data, ["service", "serviceNeeded"]);
     const message = pickField(data, ["message", "details"]);
     const page = pickField(data, ["page", "pageUrl", "page_url"]);
+    const normalizedService = compactText(service);
 
     if (!firstName || !lastName || !email || !phone || !service) {
         return res.status(400).json({
@@ -208,6 +253,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     if (service.length > MAX_SERVICE_LENGTH) {
         return res.status(400).json({ ok: false, error: "Service field is too long." });
+    }
+
+    if (!ALLOWED_SERVICES.has(normalizedService)) {
+        return res.status(400).json({ ok: false, error: "Please select a valid service option." });
     }
 
     if (page.length > MAX_PAGE_URL_LENGTH) {
@@ -243,8 +292,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         return res.status(400).json({ ok: false, error: "Message is too long. Please keep it under 5000 characters." });
     }
 
+    const duplicateMessageFingerprint = compactText(message)
+        .replace(/https?:\/\/\S+|www\.\S+/g, "")
+        .slice(0, 280);
+    const duplicateKey = `${email.toLowerCase()}|${phoneDigits}|${normalizedService}|${duplicateMessageFingerprint || "-"}`;
+    if (isLikelyDuplicateSubmission(duplicateKey)) {
+        return res.status(200).json({ ok: true });
+    }
+
     const fullName = `${firstName} ${lastName}`;
-    const combinedText = `${firstName} ${lastName} ${email} ${message}`.toLowerCase();
+    const combinedText = `${firstName} ${lastName} ${email} ${normalizedService} ${message}`.toLowerCase();
+    const messageText = message.toLowerCase();
 
     const urlPattern = /https?:\/\/|www\./gi;
     const urlCount = (combinedText.match(urlPattern) || []).length;
@@ -262,6 +320,45 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         "work from home", "make money fast", "earn $$"
     ];
     if (spamKeywords.some((keyword) => combinedText.includes(keyword))) {
+        return res.status(200).json({ ok: true });
+    }
+
+    const agencySpamPhrases = [
+        "marketing agency",
+        "digital marketing",
+        "seo agency",
+        "seo expert",
+        "seo specialist",
+        "web design agency",
+        "website design",
+        "website redesign",
+        "website development",
+        "google ads",
+        "facebook ads",
+        "instagram ads",
+        "lead generation",
+        "book more appointments",
+        "appointment setting",
+        "cold outreach",
+        "link building",
+        "guest post",
+        "improve your rankings",
+        "rank your website",
+        "increase your traffic",
+        "grow your business",
+        "virtual assistant services",
+        "outsourced callers"
+    ];
+    const agencySignalCount = agencySpamPhrases.reduce(
+        (count, phrase) => count + (combinedText.includes(phrase) ? 1 : 0),
+        0
+    );
+    if (agencySignalCount >= 2) {
+        return res.status(200).json({ ok: true });
+    }
+
+    const messageUrlCount = (messageText.match(urlPattern) || []).length;
+    if (messageUrlCount > 0 && agencySignalCount > 0) {
         return res.status(200).json({ ok: true });
     }
 
@@ -298,8 +395,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }).format(new Date());
 
     const safeName = fullName || "Website Form";
-    const safeService = service || "Website Form";
-    const subject = `⚠️New Lead ⚠️| ${safeService} | ${safeName}`;
+    const safeService = SERVICE_LABELS[normalizedService] || service || "Website Form";
+    const subject = `New Lead | ${safeService} | ${safeName}`;
 
     const pageUrlIsDev =
         !!page &&
@@ -419,7 +516,7 @@ timestamp: ${timestamp}
 name: ${safeName}
 phone: ${phone}
 email: ${email}
-service: ${service}
+service: ${safeService}
 message: ${message || "(none)"}
   `.trim();
 

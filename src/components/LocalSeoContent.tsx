@@ -43,7 +43,7 @@ export default function LocalSeoContent() {
 
                     <div className="space-y-6 text-neutral-600 font-light leading-relaxed">
                         <p>
-                            The Toro Group Corp helps clients buy and sell homes across Orange County with a focus on Newport Beach, Laguna Beach, Corona Del Mar, Irvine, Huntington Beach, and Dana Point.
+                            The Toro Group Corp is an Orange County real estate team helping clients buy and sell homes in Newport Beach, Laguna Beach, Corona Del Mar, Irvine, Huntington Beach, and Dana Point.
                         </p>
                         <p>
                             Whether you are moving up, downsizing, investing, or relocating to the coast, our process is built around pricing accuracy, negotiation strength, and clear communication.
